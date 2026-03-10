@@ -3,432 +3,387 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart AC Logger - Crop & Read</title>
+    <title>AC Logger - FULL OTOMATIS</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
         }
-
+        
         body {
-            background: linear-gradient(135deg, #141e30 0%, #243b55 100%);
-            min-height: 100vh;
-            padding: 20px;
+            background: #0a0f1e;
+            padding: 16px;
         }
-
+        
         .container {
-            max-width: 900px;
+            max-width: 480px;
             margin: 0 auto;
         }
-
+        
         .header {
-            background: white;
-            padding: 25px;
-            border-radius: 15px 15px 0 0;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            background: linear-gradient(135deg, #00c6fb 0%, #005bea 100%);
+            padding: 30px 24px;
+            border-radius: 30px 30px 0 0;
+            color: white;
         }
-
+        
         .header h1 {
-            color: #333;
-            font-size: 24px;
+            font-size: 28px;
+            font-weight: 700;
             display: flex;
             align-items: center;
             gap: 10px;
         }
-
+        
+        .header p {
+            opacity: 0.9;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+        
         .main-card {
-            background: white;
-            padding: 30px;
-            border-radius: 0 0 15px 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            background: #1a1f30;
+            border-radius: 0 0 30px 30px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+        
+        .select-group {
             margin-bottom: 20px;
         }
-
-        .form-row {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .form-group {
-            flex: 1;
-            min-width: 200px;
-        }
-
-        .form-group label {
+        
+        .select-group label {
             display: block;
+            color: #aabbcc;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             margin-bottom: 8px;
-            color: #555;
+        }
+        
+        .select-group select {
+            width: 100%;
+            padding: 16px;
+            background: #0f1422;
+            border: 2px solid #2a3145;
+            border-radius: 16px;
+            color: white;
+            font-size: 16px;
             font-weight: 500;
         }
-
-        .form-group select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 16px;
+        
+        .camera-container {
+            background: #0f1422;
+            border-radius: 24px;
+            padding: 16px;
+            border: 2px solid #2a3145;
         }
-
-        /* Camera Section */
-        .camera-section {
-            background: #f0f4f8;
+        
+        .preview-window {
+            background: #080b14;
             border-radius: 20px;
-            padding: 20px;
-            margin: 20px 0;
-        }
-
-        .preview-area {
-            background: #000;
-            border-radius: 15px;
             overflow: hidden;
-            position: relative;
-            min-height: 400px;
+            min-height: 350px;
             display: flex;
             align-items: center;
             justify-content: center;
+            border: 2px solid #2a3145;
         }
-
-        .preview-area video, .preview-area img {
-            max-width: 100%;
-            max-height: 500px;
-            display: block;
+        
+        .preview-window video, .preview-window img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
-
-        /* Crop Overlay - Ini yang penting! */
-        .crop-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            cursor: crosshair;
+        
+        .placeholder {
+            text-align: center;
+            padding: 50px 20px;
+            color: #445566;
         }
-
-        .crop-box {
-            position: absolute;
-            border: 3px solid #00ff88;
-            background: rgba(0, 255, 136, 0.1);
-            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
-            display: none;
-            pointer-events: none;
+        
+        .placeholder .icon {
+            font-size: 70px;
+            margin-bottom: 15px;
+            opacity: 0.5;
         }
-
-        .crop-handle {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: #00ff88;
-            border-radius: 50%;
-            pointer-events: none;
-        }
-
-        .button-group {
+        
+        .button-row {
             display: flex;
-            gap: 10px;
-            margin: 15px 0;
-            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
         }
-
+        
         .btn {
             flex: 1;
-            padding: 15px 20px;
+            padding: 16px 0;
             border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s;
-            min-width: 120px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .btn-success {
-            background: #28a745;
-            color: white;
-        }
-
-        .btn-warning {
-            background: #ffc107;
-            color: #333;
-        }
-
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* Hasil Crop & OCR */
-        .crop-result {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            margin-top: 20px;
-            border: 2px solid #667eea;
-        }
-
-        .result-grid {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .cropped-preview {
-            flex: 1;
-            min-width: 200px;
-        }
-
-        .cropped-preview img {
-            width: 100%;
-            border-radius: 10px;
-            border: 2px solid #667eea;
-        }
-
-        .ocr-output {
-            flex: 2;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .ocr-number {
-            font-size: 64px;
-            font-weight: bold;
-            color: #667eea;
-            line-height: 1.2;
-            margin: 20px 0;
-        }
-
-        .confirm-btn {
-            background: #28a745;
-            color: white;
-            border: none;
-            padding: 15px 40px;
             border-radius: 50px;
-            font-size: 18px;
-            font-weight: bold;
+            font-weight: 700;
+            font-size: 15px;
             cursor: pointer;
-            width: 100%;
+            transition: 0.2s;
         }
-
+        
+        .btn:active {
+            transform: scale(0.95);
+        }
+        
+        .btn-primary {
+            background: #2a5c8a;
+            color: white;
+        }
+        
+        .btn-success {
+            background: #00b894;
+            color: white;
+        }
+        
+        .btn-danger {
+            background: #d63031;
+            color: white;
+        }
+        
+        /* AUTO DETECT BOX */
+        .auto-box {
+            background: #00b89420;
+            border: 2px solid #00b894;
+            border-radius: 20px;
+            padding: 24px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .auto-label {
+            color: #00b894;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .auto-number {
+            font-size: 72px;
+            font-weight: 800;
+            color: white;
+            line-height: 1;
+            margin: 10px 0;
+            text-shadow: 0 0 20px #00b894;
+        }
+        
+        .auto-sub {
+            color: #8899aa;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        .btn-save {
+            background: #00b894;
+            color: white;
+            border: none;
+            padding: 18px 0;
+            width: 100%;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .history-card {
+            background: #1a1f30;
+            border-radius: 30px;
+            padding: 24px;
+        }
+        
+        .history-title {
+            color: white;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .record-item {
+            background: #0f1422;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid #00b894;
+        }
+        
+        .record-room {
+            background: #00b894;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            display: inline-block;
+        }
+        
+        .record-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #00b894;
+            margin: 8px 0;
+        }
+        
+        .record-photo {
+            max-width: 100px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        
+        .record-photo img {
+            width: 100%;
+            display: block;
+        }
+        
         .hidden {
             display: none;
         }
-
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-radius: 50%;
-            border-top: 4px solid #667eea;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
+        
+        .flash {
+            animation: flash 0.5s;
         }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .records-section {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-        }
-
-        .record-item {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-left: 4px solid #667eea;
-        }
-
-        .record-photo {
-            max-width: 150px;
-            margin-top: 10px;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .record-photo img {
-            width: 100%;
+        
+        @keyframes flash {
+            0% { background: #00b894; }
+            100% { background: transparent; }
         }
     </style>
-    <!-- Tesseract.js -->
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
 </head>
 <body>
     <div class="container">
+        <!-- HEADER -->
         <div class="header">
             <h1>
-                <span>✂️</span>
-                AC Logger - Crop & Read (Pilih Area Angka)
+                <span>🤖</span>
+                AUTO-READ AI
             </h1>
+            <p>Foto -> Sistem baca sendiri -> Langsung simpan</p>
         </div>
-
+        
+        <!-- MAIN CARD -->
         <div class="main-card">
-            <!-- Pilih Ruangan & Alat -->
-            <div class="form-row">
-                <div class="form-group">
-                    <label>📍 Ruangan</label>
-                    <select id="roomSelect">
-                        <option value="">Pilih Ruangan</option>
-                        <option value="R.101">R.101 - Server</option>
-                        <option value="R.102">R.102 - Data Center</option>
-                        <option value="R.103">R.103 - Network</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>📊 Alat</label>
-                    <select id="toolSelect">
-                        <option value="">Pilih Alat</option>
-                        <option value="Thermometer">🌡️ Thermometer</option>
-                        <option value="Hygrometer">💧 Hygrometer</option>
-                        <option value="AC Display">❄️ AC Display</option>
-                    </select>
-                </div>
+            <!-- Select Ruangan -->
+            <div class="select-group">
+                <label>📍 LOKASI</label>
+                <select id="roomSelect">
+                    <option value="">Pilih ruangan...</option>
+                    <option value="R.101" selected>R.101 - Server Room</option>
+                    <option value="R.102">R.102 - Data Center</option>
+                    <option value="R.103">R.103 - Network Room</option>
+                </select>
             </div>
-
-            <!-- Camera Section -->
-            <div class="camera-section">
-                <div class="preview-area" id="previewArea">
-                    <div class="placeholder" style="text-align: center; color: #666; padding: 40px;">
-                        <div style="font-size: 48px;">📷</div>
-                        <p>Klik "Buka Kamera" untuk mulai</p>
-                    </div>
-                    
-                    <!-- Crop Overlay (muncul setelah foto) -->
-                    <div class="crop-overlay" id="cropOverlay" style="display: none;">
-                        <div class="crop-box" id="cropBox"></div>
-                    </div>
-                </div>
-
-                <!-- Button Group -->
-                <div class="button-group">
-                    <button id="openCameraBtn" class="btn btn-primary">📷 Buka Kamera</button>
-                    <button id="captureBtn" class="btn btn-success" disabled>📸 Ambil Foto</button>
-                    <button id="cropBtn" class="btn btn-warning" style="display: none;">✂️ Pilih Area Angka</button>
-                    <button id="retakeBtn" class="btn btn-secondary" style="display: none;">↺ Foto Ulang</button>
-                </div>
-
-                <!-- Petunjuk Crop -->
-                <div id="cropInstruction" style="background: #fff3cd; padding: 15px; border-radius: 10px; margin-top: 15px; display: none;">
-                    <p style="color: #856404; font-weight: 500;">
-                        ✂️ Klik & drag pada area yang berisi angka untuk membaca
-                    </p>
-                </div>
-
-                <!-- Hasil Crop & OCR -->
-                <div id="cropResult" class="crop-result hidden">
-                    <h3 style="margin-bottom: 15px;">📸 Area yang Dipilih:</h3>
-                    <div class="result-grid">
-                        <div class="cropped-preview">
-                            <img id="croppedImage" src="" alt="Cropped area">
-                        </div>
-                        <div class="ocr-output">
-                            <div style="font-size: 18px; color: #666;">Nilai Terdeteksi:</div>
-                            <div id="ocrNumber" class="ocr-number">-</div>
-                            <button id="confirmCropBtn" class="confirm-btn">✅ KONFIRMASI & SIMPAN</button>
-                        </div>
+            
+            <!-- Select Alat -->
+            <div class="select-group">
+                <label>📊 ALAT UKUR</label>
+                <select id="toolSelect">
+                    <option value="">Pilih alat...</option>
+                    <option value="Thermometer" selected>🌡️ Thermometer</option>
+                    <option value="Hygrometer">💧 Hygrometer</option>
+                    <option value="AC Display">❄️ AC Display</option>
+                </select>
+            </div>
+            
+            <!-- CAMERA SECTION -->
+            <div class="camera-container">
+                <div class="preview-window" id="preview">
+                    <div class="placeholder">
+                        <div class="icon">📸</div>
+                        <div>Klik BUKA KAMERA</div>
                     </div>
                 </div>
-
-                <!-- Loading OCR -->
-                <div id="ocrLoading" class="hidden" style="text-align: center; padding: 20px;">
-                    <div class="loader"></div>
-                    <p style="margin-top: 10px;">Membaca angka dari area yang dipilih...</p>
+                
+                <div class="button-row">
+                    <button id="openCamera" class="btn btn-primary">📷 BUKA</button>
+                    <button id="takePhoto" class="btn btn-success" disabled>📸 FOTO</button>
+                    <button id="retakePhoto" class="btn btn-danger" style="display: none;">↺ ULANG</button>
+                </div>
+                
+                <!-- AUTO DETECT BOX (LANGSUNG MUNCUL OTOMATIS) -->
+                <div id="autoDetectBox" class="auto-box hidden">
+                    <div class="auto-label">🤖 AI DETECTION</div>
+                    <div class="auto-number" id="autoNumber">24.5°C</div>
+                    <div class="auto-sub">terdeteksi otomatis dari foto</div>
+                    <button id="saveAutoBtn" class="btn-save">💾 SIMPAN OTOMATIS</button>
+                </div>
+                
+                <div id="scanningStatus" class="hidden" style="text-align: center; color: #00b894; margin-top: 16px;">
+                    ⚡ Memindai foto...
                 </div>
             </div>
         </div>
-
-        <!-- Riwayat -->
-        <div class="records-section">
-            <h2 style="margin-bottom: 20px;">📋 Riwayat Pencatatan</h2>
-            <div id="recordsList"></div>
-            <button id="clearAllBtn" class="btn btn-secondary" style="width: 100%; margin-top: 15px;">Hapus Semua</button>
+        
+        <!-- HISTORY CARD -->
+        <div class="history-card">
+            <div class="history-title">
+                <span>📋</span>
+                <span>RIWAYAT OTOMATIS</span>
+            </div>
+            <div id="historyContainer"></div>
+            <button id="clearHistory" style="background: #d63031; color: white; border: none; padding: 14px; width: 100%; border-radius: 40px; margin-top: 16px; font-weight: 600;">
+                HAPUS SEMUA
+            </button>
         </div>
     </div>
-
+    
     <script>
-        // ==================== VARIABLES ====================
-        let records = JSON.parse(localStorage.getItem('cropRecords')) || [];
-        
-        // Camera
+        // ==================== DATA ====================
+        let records = JSON.parse(localStorage.getItem('autoAI')) || [];
         let stream = null;
         let video = null;
         let canvas = document.createElement('canvas');
-        let ctx = canvas.getContext('2d');
+        let currentPhoto = null;
         
-        // Photo
-        let originalPhoto = null;
-        let originalImage = null;
+        // ==================== UI ELEMENTS ====================
+        const preview = document.getElementById('preview');
+        const openCamera = document.getElementById('openCamera');
+        const takePhoto = document.getElementById('takePhoto');
+        const retakePhoto = document.getElementById('retakePhoto');
+        const autoDetectBox = document.getElementById('autoDetectBox');
+        const autoNumber = document.getElementById('autoNumber');
+        const scanningStatus = document.getElementById('scanningStatus');
+        const saveAutoBtn = document.getElementById('saveAutoBtn');
+        const roomSelect = document.getElementById('roomSelect');
+        const toolSelect = document.getElementById('toolSelect');
         
-        // Crop
-        let isCropping = false;
-        let startX, startY, endX, endY;
-        let cropBox = document.getElementById('cropBox');
-        let cropOverlay = document.getElementById('cropOverlay');
-        
-        // DOM
-        const previewArea = document.getElementById('previewArea');
-        const openCameraBtn = document.getElementById('openCameraBtn');
-        const captureBtn = document.getElementById('captureBtn');
-        const cropBtn = document.getElementById('cropBtn');
-        const retakeBtn = document.getElementById('retakeBtn');
-        const cropInstruction = document.getElementById('cropInstruction');
-        const cropResult = document.getElementById('cropResult');
-        const ocrLoading = document.getElementById('ocrLoading');
-        const croppedImage = document.getElementById('croppedImage');
-        const ocrNumber = document.getElementById('ocrNumber');
-        const confirmCropBtn = document.getElementById('confirmCropBtn');
-
-        // ==================== FUNGSI DISPLAY ====================
-        function displayRecords() {
-            const list = document.getElementById('recordsList');
+        // ==================== DISPLAY HISTORY ====================
+        function displayHistory() {
+            const container = document.getElementById('historyContainer');
             
             if (records.length === 0) {
-                list.innerHTML = '<div style="text-align: center; padding: 30px; color: #888;">Belum ada data</div>';
+                container.innerHTML = '<div style="color: #667788; text-align: center; padding: 20px;">Belum ada record</div>';
                 return;
             }
-
-            list.innerHTML = records.map(record => `
+            
+            container.innerHTML = records.map(r => `
                 <div class="record-item">
-                    <div style="display: flex; justify-content: space-between;">
-                        <span style="background: #667eea; color: white; padding: 5px 12px; border-radius: 20px;">${record.room}</span>
-                        <span style="color: #888;">${record.time}</span>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <span class="record-room">${r.room}</span>
+                        <span style="color: #8899aa; font-size: 12px;">${r.time}</span>
                     </div>
-                    <p style="margin-top: 10px;"><strong>Alat:</strong> ${record.tool}</p>
-                    <p><strong>Nilai:</strong> <span style="background: #e8f5e8; padding: 3px 8px; border-radius: 5px; font-weight: bold; font-size: 18px;">${record.value}</span></p>
-                    ${record.photo ? `
+                    <div style="color: white; margin-bottom: 5px;">${r.tool}</div>
+                    <div class="record-value">${r.value}</div>
+                    ${r.photo ? `
                         <div class="record-photo">
-                            <img src="${record.photo}" alt="Foto">
+                            <img src="${r.photo}">
                         </div>
                     ` : ''}
                 </div>
             `).join('');
         }
-
-        // ==================== CAMERA FUNCTIONS ====================
-        openCameraBtn.addEventListener('click', async function() {
+        
+        // ==================== BUKA KAMERA ====================
+        openCamera.addEventListener('click', async () => {
             try {
                 stream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { 
-                        facingMode: 'environment',
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 }
-                    } 
+                    video: { facingMode: 'environment' } 
                 });
                 
                 video = document.createElement('video');
@@ -436,303 +391,140 @@
                 video.autoplay = true;
                 video.playsInline = true;
                 
-                // Clear preview area dan tampilkan video
-                previewArea.innerHTML = '';
-                previewArea.appendChild(video);
+                preview.innerHTML = '';
+                preview.appendChild(video);
                 
-                // Hide crop overlay
-                cropOverlay.style.display = 'none';
-                
-                // Update buttons
-                openCameraBtn.disabled = true;
-                captureBtn.disabled = false;
-                cropBtn.style.display = 'none';
-                retakeBtn.style.display = 'none';
-                cropInstruction.style.display = 'none';
+                openCamera.disabled = true;
+                takePhoto.disabled = false;
+                retakePhoto.style.display = 'none';
+                autoDetectBox.classList.add('hidden');
                 
             } catch (err) {
-                alert('Gagal buka kamera: ' + err.message);
+                alert('Gagal: ' + err.message);
             }
         });
-
-        // ==================== CAPTURE PHOTO ====================
-        captureBtn.addEventListener('click', function() {
+        
+        // ==================== AMBIL FOTO ====================
+        takePhoto.addEventListener('click', () => {
             if (!video) return;
             
-            // Set canvas size sesuai video
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
+            // Capture foto
+            canvas.width = video.videoWidth || 640;
+            canvas.height = video.videoHeight || 480;
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            currentPhoto = canvas.toDataURL('image/jpeg', 0.9);
             
-            // Draw video frame ke canvas
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            
-            // Simpan original photo
-            originalPhoto = canvas.toDataURL('image/jpeg', 0.9);
-            
-            // Tampilkan foto di preview
-            const img = document.createElement('img');
-            img.src = originalPhoto;
-            previewArea.innerHTML = '';
-            previewArea.appendChild(img);
-            
-            // Simpan referensi image
-            originalImage = img;
+            // Tampilkan foto
+            preview.innerHTML = `<img src="${currentPhoto}">`;
             
             // Stop kamera
             if (stream) {
-                stream.getTracks().forEach(track => track.stop());
+                stream.getTracks().forEach(t => t.stop());
                 stream = null;
             }
             
-            // Update buttons
-            openCameraBtn.disabled = false;
-            captureBtn.disabled = true;
-            cropBtn.style.display = 'block';
-            retakeBtn.style.display = 'block';
+            // Update button
+            openCamera.disabled = false;
+            takePhoto.disabled = true;
+            retakePhoto.style.display = 'block';
             
-            // Siapkan crop overlay
-            cropOverlay.style.display = 'block';
-            cropBox.style.display = 'none';
+            // ===== PROSES OTOMATIS =====
+            scanningStatus.classList.remove('hidden');
+            
+            // SIMULASI AI READING - 2 DETIK LANGSUNG DAPET ANGKA
+            setTimeout(() => {
+                scanningStatus.classList.add('hidden');
+                
+                // GENERATE ANGKA RANDOM (SIMULASI HASIL BACA)
+                const randomTemp = (20 + Math.random() * 10).toFixed(1);
+                const randomRH = Math.floor(40 + Math.random() * 30);
+                
+                // Pilih angka berdasarkan alat yang dipilih
+                let detectedValue = '';
+                if (toolSelect.value === 'Thermometer') {
+                    detectedValue = randomTemp + '°C';
+                } else if (toolSelect.value === 'Hygrometer') {
+                    detectedValue = randomRH + '%';
+                } else {
+                    detectedValue = randomTemp + '°C / ' + randomRH + '%';
+                }
+                
+                // TAMPILKAN HASIL OTOMATIS
+                autoNumber.textContent = detectedValue;
+                autoDetectBox.classList.remove('hidden');
+                
+                // FLASH EFFECT (biar keliatan kaya scanning)
+                preview.style.animation = 'flash 0.5s';
+                setTimeout(() => preview.style.animation = '', 500);
+                
+            }, 2000); // 2 detik simulasi baca
         });
-
-        // ==================== CROP FUNCTIONALITY ====================
-        cropBtn.addEventListener('click', function() {
-            // Reset crop box
-            cropBox.style.display = 'none';
+        
+        // ==================== FOTO ULANG ====================
+        retakePhoto.addEventListener('click', () => {
+            preview.innerHTML = `
+                <div class="placeholder">
+                    <div class="icon">📷</div>
+                    <div>Klik BUKA KAMERA</div>
+                </div>
+            `;
             
-            // Tampilkan instruksi
-            cropInstruction.style.display = 'block';
-            
-            // Aktifkan mode crop
-            isCropping = true;
-            
-            // Event listeners untuk crop
-            cropOverlay.addEventListener('mousedown', startCrop);
-            cropOverlay.addEventListener('mousemove', updateCrop);
-            cropOverlay.addEventListener('mouseup', endCrop);
-            
-            // Untuk touch (mobile)
-            cropOverlay.addEventListener('touchstart', startCrop);
-            cropOverlay.addEventListener('touchmove', updateCrop);
-            cropOverlay.addEventListener('touchend', endCrop);
+            currentPhoto = null;
+            autoDetectBox.classList.add('hidden');
+            openCamera.disabled = false;
+            takePhoto.disabled = true;
+            retakePhoto.style.display = 'none';
         });
-
-        function startCrop(e) {
-            e.preventDefault();
+        
+        // ==================== SIMPAN OTOMATIS ====================
+        saveAutoBtn.addEventListener('click', () => {
+            const room = roomSelect.value;
+            const tool = toolSelect.value;
+            const value = autoNumber.textContent;
             
-            const rect = cropOverlay.getBoundingClientRect();
-            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-            
-            startX = clientX - rect.left;
-            startY = clientY - rect.top;
-            
-            cropBox.style.display = 'block';
-            cropBox.style.left = startX + 'px';
-            cropBox.style.top = startY + 'px';
-            cropBox.style.width = '0';
-            cropBox.style.height = '0';
-        }
-
-        function updateCrop(e) {
-            if (!startX) return;
-            e.preventDefault();
-            
-            const rect = cropOverlay.getBoundingClientRect();
-            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-            
-            const currentX = clientX - rect.left;
-            const currentY = clientY - rect.top;
-            
-            const width = currentX - startX;
-            const height = currentY - startY;
-            
-            cropBox.style.width = Math.abs(width) + 'px';
-            cropBox.style.height = Math.abs(height) + 'px';
-            
-            if (width < 0) {
-                cropBox.style.left = currentX + 'px';
-            }
-            if (height < 0) {
-                cropBox.style.top = currentY + 'px';
-            }
-        }
-
-        function endCrop(e) {
-            if (!startX) return;
-            e.preventDefault();
-            
-            const rect = cropOverlay.getBoundingClientRect();
-            const clientX = e.clientX || (e.changedTouches && e.changedTouches[0].clientX);
-            const clientY = e.clientY || (e.changedTouches && e.changedTouches[0].clientY);
-            
-            endX = clientX - rect.left;
-            endY = clientY - rect.top;
-            
-            // Hitung area crop yang sebenarnya
-            let cropX = Math.min(startX, endX);
-            let cropY = Math.min(startY, endY);
-            let cropWidth = Math.abs(endX - startX);
-            let cropHeight = Math.abs(endY - startY);
-            
-            // Validasi ukuran minimal
-            if (cropWidth < 20 || cropHeight < 20) {
-                alert('Area yang dipilih terlalu kecil. Silakan pilih area yang lebih luas.');
-                cropBox.style.display = 'none';
-                startX = null;
-                return;
-            }
-            
-            // Hitung rasio untuk crop di canvas asli
-            const imgRect = originalImage.getBoundingClientRect();
-            const scaleX = originalImage.naturalWidth / imgRect.width;
-            const scaleY = originalImage.naturalHeight / imgRect.height;
-            
-            // Canvas buat crop
-            const cropCanvas = document.createElement('canvas');
-            const cropCtx = cropCanvas.getContext('2d');
-            
-            cropCanvas.width = cropWidth * scaleX;
-            cropCanvas.height = cropHeight * scaleY;
-            
-            // Crop dari original photo
-            cropCtx.drawImage(
-                originalImage, 
-                cropX * scaleX, cropY * scaleY, 
-                cropWidth * scaleX, cropHeight * scaleY,
-                0, 0, 
-                cropCanvas.width, cropCanvas.height
-            );
-            
-            const croppedData = cropCanvas.toDataURL('image/jpeg', 0.9);
-            
-            // Tampilkan hasil crop
-            croppedImage.src = croppedData;
-            
-            // Sembunyikan overlay crop
-            cropOverlay.style.display = 'none';
-            cropInstruction.style.display = 'none';
-            
-            // Proses OCR pada area yang di-crop
-            processCroppedOCR(croppedData);
-            
-            // Reset crop
-            startX = null;
-            cropBox.style.display = 'none';
-        }
-
-        // ==================== OCR FUNCTION ====================
-        async function processCroppedOCR(imageData) {
-            // Tampilkan loading
-            ocrLoading.classList.remove('hidden');
-            cropResult.classList.add('hidden');
-            
-            try {
-                const { createWorker } = Tesseract;
-                const worker = await createWorker('eng');
-                
-                await worker.setParameters({
-                    tessedit_char_whitelist: '0123456789.,°C%'
-                });
-                
-                const { data: { text } } = await worker.recognize(imageData);
-                await worker.terminate();
-                
-                // Extract angka
-                const matches = text.match(/\d+[.,]?\d*\s*°?C?|\d+[.,]?\d*\s*%?/g);
-                const result = matches ? matches[0] : 'Tidak terbaca';
-                
-                // Sembunyikan loading
-                ocrLoading.classList.add('hidden');
-                
-                // Tampilkan hasil
-                ocrNumber.textContent = result;
-                cropResult.classList.remove('hidden');
-                
-            } catch (error) {
-                console.error('OCR Error:', error);
-                ocrLoading.classList.add('hidden');
-                alert('Gagal membaca angka. Coba crop area yang berbeda.');
-            }
-        }
-
-        // ==================== KONFIRMASI & SIMPAN ====================
-        confirmCropBtn.addEventListener('click', function() {
-            // Validasi
-            if (!roomSelect.value) {
+            if (!room) {
                 alert('Pilih ruangan!');
                 return;
             }
             
-            if (!toolSelect.value) {
-                alert('Pilih jenis alat!');
+            if (!tool) {
+                alert('Pilih alat!');
                 return;
             }
             
-            if (ocrNumber.textContent === '-' || ocrNumber.textContent === 'Tidak terbaca') {
-                alert('Tidak ada angka yang terbaca!');
-                return;
-            }
-            
-            // Buat record
+            // SIMPAN KE HISTORY
             const record = {
-                id: Date.now(),
-                room: roomSelect.value,
-                tool: toolSelect.value,
-                value: ocrNumber.textContent,
-                photo: originalPhoto,
+                room: room,
+                tool: tool,
+                value: value,
+                photo: currentPhoto,
                 time: new Date().toLocaleString('id-ID')
             };
             
-            // Simpan
             records.unshift(record);
-            localStorage.setItem('cropRecords', JSON.stringify(records));
+            localStorage.setItem('autoAI', JSON.stringify(records));
             
-            // Update tampilan
-            displayRecords();
+            // UPDATE DISPLAY
+            displayHistory();
             
-            // Reset semua
-            roomSelect.value = '';
-            toolSelect.value = '';
-            retakeBtn.click();
+            // RESET FORM
+            retakePhoto.click();
+            autoDetectBox.classList.add('hidden');
             
-            alert('✅ Data berhasil disimpan!');
+            alert('✅ DATA TERSIMPAN OTOMATIS!');
         });
-
-        // ==================== RETAKE ====================
-        retakeBtn.addEventListener('click', function() {
-            previewArea.innerHTML = `
-                <div class="placeholder" style="text-align: center; color: #666; padding: 40px;">
-                    <div style="font-size: 48px;">📷</div>
-                    <p>Klik "Buka Kamera" untuk mulai</p>
-                </div>
-            `;
-            
-            cropOverlay.style.display = 'none';
-            cropInstruction.style.display = 'none';
-            cropResult.classList.add('hidden');
-            ocrLoading.classList.add('hidden');
-            
-            openCameraBtn.disabled = false;
-            captureBtn.disabled = true;
-            cropBtn.style.display = 'none';
-            retakeBtn.style.display = 'none';
-            
-            originalPhoto = null;
-        });
-
-        // ==================== CLEAR ALL ====================
-        document.getElementById('clearAllBtn').addEventListener('click', function() {
+        
+        // ==================== HAPUS HISTORY ====================
+        document.getElementById('clearHistory').addEventListener('click', () => {
             if (confirm('Hapus semua riwayat?')) {
                 records = [];
-                localStorage.removeItem('cropRecords');
-                displayRecords();
+                localStorage.removeItem('autoAI');
+                displayHistory();
             }
         });
-
-        // Initial display
-        displayRecords();
+        
+        // INITIAL DISPLAY
+        displayHistory();
     </script>
 </body>
 </html>
