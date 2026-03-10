@@ -3,256 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AC Logger - FULL OTOMATIS</title>
+    <title>AC Logger - Dengan Flash Wajib</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
         }
         
         body {
-            background: #0a0f1e;
+            background: #0d1117;
             padding: 16px;
         }
         
         .container {
-            max-width: 480px;
+            max-width: 500px;
             margin: 0 auto;
         }
         
         .header {
-            background: linear-gradient(135deg, #00c6fb 0%, #005bea 100%);
+            background: linear-gradient(145deg, #1e3c72, #2a5298);
             padding: 30px 24px;
             border-radius: 30px 30px 0 0;
             color: white;
         }
         
-        .header h1 {
-            font-size: 28px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .flash-badge {
+            background: #ffd700;
+            color: #000;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 10px;
+            animation: blink 1s infinite;
         }
         
-        .header p {
-            opacity: 0.9;
-            margin-top: 5px;
-            font-size: 14px;
+        @keyframes blink {
+            0% { opacity: 1; background: #ffd700; }
+            50% { opacity: 0.8; background: #ffaa00; box-shadow: 0 0 20px #ffd700; }
+            100% { opacity: 1; background: #ffd700; }
         }
         
         .main-card {
-            background: #1a1f30;
+            background: #1a2634;
             border-radius: 0 0 30px 30px;
             padding: 24px;
             margin-bottom: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
         }
         
-        .select-group {
-            margin-bottom: 20px;
-        }
-        
-        .select-group label {
-            display: block;
-            color: #aabbcc;
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-        }
-        
-        .select-group select {
-            width: 100%;
-            padding: 16px;
-            background: #0f1422;
-            border: 2px solid #2a3145;
-            border-radius: 16px;
-            color: white;
-            font-size: 16px;
-            font-weight: 500;
-        }
-        
-        .camera-container {
-            background: #0f1422;
+        .camera-box {
+            background: #0f172a;
             border-radius: 24px;
             padding: 16px;
-            border: 2px solid #2a3145;
+            border: 3px solid #ffd700;
+            box-shadow: 0 0 20px #ffd70040;
         }
         
-        .preview-window {
-            background: #080b14;
+        .preview {
+            background: #000;
             border-radius: 20px;
             overflow: hidden;
             min-height: 350px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid #2a3145;
+            position: relative;
         }
         
-        .preview-window video, .preview-window img {
+        .preview video, .preview img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
         
-        .placeholder {
-            text-align: center;
-            padding: 50px 20px;
-            color: #445566;
+        .flash-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #ffd700;
+            color: #000;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-weight: bold;
+            z-index: 10;
+            animation: pulse 1.5s infinite;
         }
         
-        .placeholder .icon {
-            font-size: 70px;
-            margin-bottom: 15px;
-            opacity: 0.5;
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); box-shadow: 0 0 30px #ffd700; }
+            100% { transform: scale(1); }
         }
         
-        .button-row {
+        .button-group {
             display: flex;
-            gap: 8px;
+            gap: 10px;
             margin-top: 16px;
         }
         
-        .btn {
+        button {
             flex: 1;
-            padding: 16px 0;
+            padding: 16px;
             border: none;
             border-radius: 50px;
-            font-weight: 700;
-            font-size: 15px;
+            font-weight: bold;
+            font-size: 16px;
             cursor: pointer;
             transition: 0.2s;
         }
         
-        .btn:active {
+        button:active {
             transform: scale(0.95);
         }
         
-        .btn-primary {
-            background: #2a5c8a;
+        .btn-camera {
+            background: #2d3b4f;
             color: white;
         }
         
-        .btn-success {
-            background: #00b894;
-            color: white;
+        .btn-capture {
+            background: #ffd700;
+            color: #000;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         
-        .btn-danger {
-            background: #d63031;
-            color: white;
+        .btn-capture:disabled {
+            opacity: 0.5;
         }
         
-        /* AUTO DETECT BOX */
-        .auto-box {
-            background: #00b89420;
-            border: 2px solid #00b894;
+        .result-box {
+            background: linear-gradient(145deg, #1e3c72, #2a5298);
             border-radius: 20px;
             padding: 24px;
             margin-top: 20px;
-            text-align: center;
-        }
-        
-        .auto-label {
-            color: #00b894;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-        
-        .auto-number {
-            font-size: 72px;
-            font-weight: 800;
             color: white;
-            line-height: 1;
-            margin: 10px 0;
-            text-shadow: 0 0 20px #00b894;
         }
         
-        .auto-sub {
-            color: #8899aa;
-            font-size: 14px;
-            margin-bottom: 20px;
+        .number-display {
+            font-size: 64px;
+            font-weight: 800;
+            text-align: center;
+            margin: 20px 0;
+            text-shadow: 0 0 20px #ffd700;
         }
         
         .btn-save {
-            background: #00b894;
-            color: white;
-            border: none;
-            padding: 18px 0;
+            background: #ffd700;
+            color: #000;
+            padding: 18px;
             width: 100%;
             border-radius: 60px;
-            font-weight: 700;
             font-size: 18px;
-            cursor: pointer;
+            font-weight: 800;
             margin-top: 10px;
         }
         
         .history-card {
-            background: #1a1f30;
+            background: #1a2634;
             border-radius: 30px;
             padding: 24px;
         }
         
-        .history-title {
-            color: white;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .record-item {
-            background: #0f1422;
+        .record {
+            background: #0f172a;
             border-radius: 16px;
             padding: 16px;
             margin-bottom: 12px;
-            border-left: 4px solid #00b894;
+            border-left: 4px solid #ffd700;
         }
         
-        .record-room {
-            background: #00b894;
-            color: white;
+        .record-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .room-tag {
+            background: #ffd700;
+            color: #000;
             padding: 4px 12px;
             border-radius: 20px;
-            font-size: 13px;
-            display: inline-block;
+            font-weight: bold;
         }
         
         .record-value {
             font-size: 28px;
             font-weight: bold;
-            color: #00b894;
+            color: #ffd700;
             margin: 8px 0;
-        }
-        
-        .record-photo {
-            max-width: 100px;
-            border-radius: 10px;
-            overflow: hidden;
-            margin-top: 10px;
-        }
-        
-        .record-photo img {
-            width: 100%;
-            display: block;
         }
         
         .hidden {
             display: none;
-        }
-        
-        .flash {
-            animation: flash 0.5s;
-        }
-        
-        @keyframes flash {
-            0% { background: #00b894; }
-            100% { background: transparent; }
         }
     </style>
 </head>
@@ -260,74 +205,68 @@
     <div class="container">
         <!-- HEADER -->
         <div class="header">
-            <h1>
-                <span>🤖</span>
-                AUTO-READ AI
+            <h1 style="display: flex; align-items: center; gap: 10px;">
+                <span>🔦</span>
+                AC Logger - FLASH OTOMATIS
             </h1>
-            <p>Foto -> Sistem baca sendiri -> Langsung simpan</p>
+            <div class="flash-badge">⚡ FLASH WAJIB NYALA ⚡</div>
         </div>
         
         <!-- MAIN CARD -->
         <div class="main-card">
-            <!-- Select Ruangan -->
-            <div class="select-group">
-                <label>📍 LOKASI</label>
-                <select id="roomSelect">
-                    <option value="">Pilih ruangan...</option>
-                    <option value="R.101" selected>R.101 - Server Room</option>
-                    <option value="R.102">R.102 - Data Center</option>
-                    <option value="R.103">R.103 - Network Room</option>
-                </select>
-            </div>
+            <!-- Pilih Ruangan -->
+            <select id="roomSelect" style="width: 100%; padding: 16px; background: #0f172a; border: 2px solid #2d3b4f; border-radius: 16px; color: white; margin-bottom: 20px;">
+                <option value="">-- Pilih Ruangan --</option>
+                <option value="R.101">R.101 - Server Room</option>
+                <option value="R.102">R.102 - Data Center</option>
+                <option value="R.103">R.103 - Network Room</option>
+            </select>
             
-            <!-- Select Alat -->
-            <div class="select-group">
-                <label>📊 ALAT UKUR</label>
-                <select id="toolSelect">
-                    <option value="">Pilih alat...</option>
-                    <option value="Thermometer" selected>🌡️ Thermometer</option>
-                    <option value="Hygrometer">💧 Hygrometer</option>
-                    <option value="AC Display">❄️ AC Display</option>
-                </select>
-            </div>
+            <!-- Pilih Alat -->
+            <select id="toolSelect" style="width: 100%; padding: 16px; background: #0f172a; border: 2px solid #2d3b4f; border-radius: 16px; color: white; margin-bottom: 20px;">
+                <option value="">-- Pilih Alat --</option>
+                <option value="Thermometer">🌡️ Thermometer</option>
+                <option value="Hygrometer">💧 Hygrometer</option>
+                <option value="AC Display">❄️ AC Display</option>
+            </select>
             
-            <!-- CAMERA SECTION -->
-            <div class="camera-container">
-                <div class="preview-window" id="preview">
-                    <div class="placeholder">
-                        <div class="icon">📸</div>
-                        <div>Klik BUKA KAMERA</div>
+            <!-- CAMERA BOX -->
+            <div class="camera-box">
+                <div class="preview" id="preview">
+                    <div style="text-align: center; padding: 50px; color: #667788;">
+                        <div style="font-size: 48px;">📷</div>
+                        <div style="margin-top: 10px;">Klik BUKA KAMERA</div>
                     </div>
+                    <div class="flash-indicator hidden" id="flashIndicator">🔦 FLASH ON</div>
                 </div>
                 
-                <div class="button-row">
-                    <button id="openCamera" class="btn btn-primary">📷 BUKA</button>
-                    <button id="takePhoto" class="btn btn-success" disabled>📸 FOTO</button>
-                    <button id="retakePhoto" class="btn btn-danger" style="display: none;">↺ ULANG</button>
+                <div class="button-group">
+                    <button id="openCameraBtn" class="btn-camera">📷 BUKA</button>
+                    <button id="captureBtn" class="btn-capture" disabled>
+                        <span>⚡</span>
+                        FOTO DENGAN FLASH
+                        <span>⚡</span>
+                    </button>
+                    <button id="retakeBtn" class="btn-camera" style="display: none;">↺ ULANG</button>
                 </div>
                 
-                <!-- AUTO DETECT BOX (LANGSUNG MUNCUL OTOMATIS) -->
-                <div id="autoDetectBox" class="auto-box hidden">
-                    <div class="auto-label">🤖 AI DETECTION</div>
-                    <div class="auto-number" id="autoNumber">24.5°C</div>
-                    <div class="auto-sub">terdeteksi otomatis dari foto</div>
-                    <button id="saveAutoBtn" class="btn-save">💾 SIMPAN OTOMATIS</button>
-                </div>
-                
-                <div id="scanningStatus" class="hidden" style="text-align: center; color: #00b894; margin-top: 16px;">
-                    ⚡ Memindai foto...
+                <!-- Input Angka (Muncul setelah foto) -->
+                <div id="inputSection" class="hidden" style="margin-top: 20px;">
+                    <div style="color: white; text-align: center; margin-bottom: 10px;">
+                        📝 Masukkan angka yang terlihat di foto:
+                    </div>
+                    <input type="text" id="numberInput" placeholder="Contoh: 24.5°C atau 65%" 
+                        style="width: 100%; padding: 16px; background: #0f172a; border: 2px solid #ffd700; border-radius: 16px; color: white; font-size: 18px; text-align: center;">
+                    <button id="saveBtn" class="btn-save">💾 SIMPAN DATA</button>
                 </div>
             </div>
         </div>
         
         <!-- HISTORY CARD -->
         <div class="history-card">
-            <div class="history-title">
-                <span>📋</span>
-                <span>RIWAYAT OTOMATIS</span>
-            </div>
-            <div id="historyContainer"></div>
-            <button id="clearHistory" style="background: #d63031; color: white; border: none; padding: 14px; width: 100%; border-radius: 40px; margin-top: 16px; font-weight: 600;">
+            <h3 style="color: white; margin-bottom: 20px;">📋 RIWAYAT</h3>
+            <div id="historyList"></div>
+            <button id="clearBtn" style="background: #ef4444; color: white; border: none; padding: 14px; width: 100%; border-radius: 40px; margin-top: 16px;">
                 HAPUS SEMUA
             </button>
         </div>
@@ -335,78 +274,89 @@
     
     <script>
         // ==================== DATA ====================
-        let records = JSON.parse(localStorage.getItem('autoAI')) || [];
+        let records = JSON.parse(localStorage.getItem('flashRecords')) || [];
         let stream = null;
         let video = null;
         let canvas = document.createElement('canvas');
         let currentPhoto = null;
         
-        // ==================== UI ELEMENTS ====================
-        const preview = document.getElementById('preview');
-        const openCamera = document.getElementById('openCamera');
-        const takePhoto = document.getElementById('takePhoto');
-        const retakePhoto = document.getElementById('retakePhoto');
-        const autoDetectBox = document.getElementById('autoDetectBox');
-        const autoNumber = document.getElementById('autoNumber');
-        const scanningStatus = document.getElementById('scanningStatus');
-        const saveAutoBtn = document.getElementById('saveAutoBtn');
-        const roomSelect = document.getElementById('roomSelect');
-        const toolSelect = document.getElementById('toolSelect');
-        
-        // ==================== DISPLAY HISTORY ====================
-        function displayHistory() {
-            const container = document.getElementById('historyContainer');
+        // ==================== TAMPIL HISTORY ====================
+        function showHistory() {
+            const list = document.getElementById('historyList');
             
             if (records.length === 0) {
-                container.innerHTML = '<div style="color: #667788; text-align: center; padding: 20px;">Belum ada record</div>';
+                list.innerHTML = '<div style="color: #667788; text-align: center; padding: 20px;">Belum ada data</div>';
                 return;
             }
             
-            container.innerHTML = records.map(r => `
-                <div class="record-item">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                        <span class="record-room">${r.room}</span>
-                        <span style="color: #8899aa; font-size: 12px;">${r.time}</span>
+            list.innerHTML = records.map(r => `
+                <div class="record">
+                    <div class="record-header">
+                        <span class="room-tag">${r.room}</span>
+                        <span style="color: #8899aa;">${r.time}</span>
                     </div>
-                    <div style="color: white; margin-bottom: 5px;">${r.tool}</div>
+                    <div style="color: white;">${r.tool}</div>
                     <div class="record-value">${r.value}</div>
-                    ${r.photo ? `
-                        <div class="record-photo">
-                            <img src="${r.photo}">
-                        </div>
-                    ` : ''}
                 </div>
             `).join('');
         }
         
-        // ==================== BUKA KAMERA ====================
-        openCamera.addEventListener('click', async () => {
+        // ==================== BUKA KAMERA DENGAN FLASH ====================
+        document.getElementById('openCameraBtn').addEventListener('click', async function() {
             try {
+                // Minta akses kamera dengan flash
                 stream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: 'environment' } 
+                    video: { 
+                        facingMode: 'environment',
+                        // Aktifkan torch (flash) kalau support
+                        advanced: [{ torch: true }]
+                    } 
                 });
+                
+                // Cek apakah flash benar-benar nyala
+                const track = stream.getVideoTracks()[0];
+                const capabilities = track.getCapabilities();
+                
+                if (capabilities.torch) {
+                    // Flash bisa dikontrol
+                    await track.applyConstraints({ advanced: [{ torch: true }] });
+                    document.getElementById('flashIndicator').classList.remove('hidden');
+                } else {
+                    // Flash tidak support, tapi tetep jalan
+                    alert('⚠️ Perangkat tidak mendukung flash, tapi kamera tetap bisa digunakan');
+                }
                 
                 video = document.createElement('video');
                 video.srcObject = stream;
                 video.autoplay = true;
                 video.playsInline = true;
                 
+                const preview = document.getElementById('preview');
                 preview.innerHTML = '';
                 preview.appendChild(video);
+                preview.appendChild(document.getElementById('flashIndicator'));
                 
-                openCamera.disabled = true;
-                takePhoto.disabled = false;
-                retakePhoto.style.display = 'none';
-                autoDetectBox.classList.add('hidden');
+                document.getElementById('openCameraBtn').disabled = true;
+                document.getElementById('captureBtn').disabled = false;
+                document.getElementById('retakeBtn').style.display = 'none';
+                document.getElementById('inputSection').classList.add('hidden');
                 
             } catch (err) {
-                alert('Gagal: ' + err.message);
+                alert('Gagal buka kamera: ' + err.message);
             }
         });
         
         // ==================== AMBIL FOTO ====================
-        takePhoto.addEventListener('click', () => {
+        document.getElementById('captureBtn').addEventListener('click', function() {
             if (!video) return;
+            
+            // Pastikan flash masih nyala pas moto
+            if (stream) {
+                const track = stream.getVideoTracks()[0];
+                if (track.getCapabilities().torch) {
+                    track.applyConstraints({ advanced: [{ torch: true }] });
+                }
+            }
             
             // Capture foto
             canvas.width = video.videoWidth || 640;
@@ -415,7 +365,9 @@
             currentPhoto = canvas.toDataURL('image/jpeg', 0.9);
             
             // Tampilkan foto
+            const preview = document.getElementById('preview');
             preview.innerHTML = `<img src="${currentPhoto}">`;
+            preview.appendChild(document.getElementById('flashIndicator'));
             
             // Stop kamera
             if (stream) {
@@ -424,63 +376,39 @@
             }
             
             // Update button
-            openCamera.disabled = false;
-            takePhoto.disabled = true;
-            retakePhoto.style.display = 'block';
+            document.getElementById('openCameraBtn').disabled = false;
+            document.getElementById('captureBtn').disabled = true;
+            document.getElementById('retakeBtn').style.display = 'block';
+            document.getElementById('flashIndicator').classList.add('hidden');
             
-            // ===== PROSES OTOMATIS =====
-            scanningStatus.classList.remove('hidden');
-            
-            // SIMULASI AI READING - 2 DETIK LANGSUNG DAPET ANGKA
-            setTimeout(() => {
-                scanningStatus.classList.add('hidden');
-                
-                // GENERATE ANGKA RANDOM (SIMULASI HASIL BACA)
-                const randomTemp = (20 + Math.random() * 10).toFixed(1);
-                const randomRH = Math.floor(40 + Math.random() * 30);
-                
-                // Pilih angka berdasarkan alat yang dipilih
-                let detectedValue = '';
-                if (toolSelect.value === 'Thermometer') {
-                    detectedValue = randomTemp + '°C';
-                } else if (toolSelect.value === 'Hygrometer') {
-                    detectedValue = randomRH + '%';
-                } else {
-                    detectedValue = randomTemp + '°C / ' + randomRH + '%';
-                }
-                
-                // TAMPILKAN HASIL OTOMATIS
-                autoNumber.textContent = detectedValue;
-                autoDetectBox.classList.remove('hidden');
-                
-                // FLASH EFFECT (biar keliatan kaya scanning)
-                preview.style.animation = 'flash 0.5s';
-                setTimeout(() => preview.style.animation = '', 500);
-                
-            }, 2000); // 2 detik simulasi baca
+            // Tampilkan input angka
+            document.getElementById('inputSection').classList.remove('hidden');
+            document.getElementById('numberInput').focus();
         });
         
         // ==================== FOTO ULANG ====================
-        retakePhoto.addEventListener('click', () => {
-            preview.innerHTML = `
-                <div class="placeholder">
-                    <div class="icon">📷</div>
-                    <div>Klik BUKA KAMERA</div>
+        document.getElementById('retakeBtn').addEventListener('click', function() {
+            document.getElementById('preview').innerHTML = `
+                <div style="text-align: center; padding: 50px; color: #667788;">
+                    <div style="font-size: 48px;">📷</div>
+                    <div style="margin-top: 10px;">Klik BUKA KAMERA</div>
                 </div>
             `;
+            document.getElementById('preview').appendChild(document.getElementById('flashIndicator'));
             
             currentPhoto = null;
-            autoDetectBox.classList.add('hidden');
-            openCamera.disabled = false;
-            takePhoto.disabled = true;
-            retakePhoto.style.display = 'none';
+            document.getElementById('openCameraBtn').disabled = false;
+            document.getElementById('captureBtn').disabled = true;
+            document.getElementById('retakeBtn').style.display = 'none';
+            document.getElementById('inputSection').classList.add('hidden');
+            document.getElementById('numberInput').value = '';
         });
         
-        // ==================== SIMPAN OTOMATIS ====================
-        saveAutoBtn.addEventListener('click', () => {
-            const room = roomSelect.value;
-            const tool = toolSelect.value;
-            const value = autoNumber.textContent;
+        // ==================== SIMPAN DATA ====================
+        document.getElementById('saveBtn').addEventListener('click', function() {
+            const room = document.getElementById('roomSelect').value;
+            const tool = document.getElementById('toolSelect').value;
+            const value = document.getElementById('numberInput').value.trim();
             
             if (!room) {
                 alert('Pilih ruangan!');
@@ -492,7 +420,11 @@
                 return;
             }
             
-            // SIMPAN KE HISTORY
+            if (!value) {
+                alert('Masukkan angka!');
+                return;
+            }
+            
             const record = {
                 room: room,
                 tool: tool,
@@ -502,29 +434,30 @@
             };
             
             records.unshift(record);
-            localStorage.setItem('autoAI', JSON.stringify(records));
+            localStorage.setItem('flashRecords', JSON.stringify(records));
             
-            // UPDATE DISPLAY
-            displayHistory();
+            showHistory();
             
-            // RESET FORM
-            retakePhoto.click();
-            autoDetectBox.classList.add('hidden');
+            // Reset
+            document.getElementById('roomSelect').value = '';
+            document.getElementById('toolSelect').value = '';
+            document.getElementById('numberInput').value = '';
+            document.getElementById('retakeBtn').click();
             
-            alert('✅ DATA TERSIMPAN OTOMATIS!');
+            alert('✅ Data tersimpan!');
         });
         
-        // ==================== HAPUS HISTORY ====================
-        document.getElementById('clearHistory').addEventListener('click', () => {
+        // ==================== HAPUS SEMUA ====================
+        document.getElementById('clearBtn').addEventListener('click', function() {
             if (confirm('Hapus semua riwayat?')) {
                 records = [];
-                localStorage.removeItem('autoAI');
-                displayHistory();
+                localStorage.removeItem('flashRecords');
+                showHistory();
             }
         });
         
-        // INITIAL DISPLAY
-        displayHistory();
+        // Initial history
+        showHistory();
     </script>
 </body>
 </html>
