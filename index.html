@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart AC Logger - FIXED Version</title>
+    <title>Smart AC Logger - Auto OCR</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +13,7 @@
         }
 
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             min-height: 100vh;
             padding: 20px;
         }
@@ -32,7 +32,7 @@
 
         .header h1 {
             color: #333;
-            font-size: 28px;
+            font-size: 24px;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -55,154 +55,138 @@
             margin-bottom: 8px;
             color: #555;
             font-weight: 500;
-            font-size: 14px;
         }
 
-        .form-group input, .form-group select {
+        .form-group select {
             width: 100%;
-            padding: 12px 15px;
+            padding: 12px;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
             font-size: 16px;
-            transition: all 0.3s;
         }
 
-        .camera-section {
-            background: #f8f9fa;
-            border-radius: 15px;
+        .camera-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
             padding: 20px;
-            margin-bottom: 20px;
-            border: 2px solid #667eea;
+            margin: 20px 0;
+            color: white;
         }
 
-        .preview-container {
-            width: 100%;
-            min-height: 300px;
-            background: #e9ecef;
-            border-radius: 10px;
+        .preview-window {
+            background: #000;
+            border-radius: 15px;
             overflow: hidden;
-            position: relative;
             margin-bottom: 15px;
+            min-height: 300px;
             display: flex;
             align-items: center;
             justify-content: center;
+            border: 3px solid white;
         }
 
-        .preview-container video, .preview-container img {
+        .preview-window video, .preview-window img {
             max-width: 100%;
-            max-height: 400px;
-            object-fit: contain;
+            max-height: 350px;
         }
 
-        .placeholder-text {
+        .placeholder {
             text-align: center;
-            color: #888;
+            color: #999;
             padding: 40px;
         }
 
-        .placeholder-text i {
-            font-size: 48px;
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        .camera-controls {
+        .button-group {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
-            margin-top: 15px;
         }
 
         .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.3s;
             flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
             min-width: 120px;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .btn-white {
+            background: white;
+            color: #667eea;
         }
 
         .btn-success {
             background: #28a745;
-        }
-
-        .btn-secondary {
-            background: #6c757d;
+            color: white;
         }
 
         .btn-danger {
             background: #dc3545;
+            color: white;
         }
 
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .status-badge {
-            padding: 10px 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            font-weight: 500;
-        }
-
-        .status-processing {
-            background: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeeba;
-        }
-
-        .status-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .status-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .detection-box {
-            background: #e3f2fd;
-            border-radius: 10px;
+        .result-box {
+            background: rgba(255,255,255,0.2);
+            border-radius: 15px;
             padding: 20px;
-            margin: 15px 0;
-            border-left: 4px solid #2196f3;
+            margin-top: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
         }
 
-        .detection-value {
-            background: white;
-            border: 2px solid #2196f3;
-            border-radius: 8px;
-            padding: 15px;
-            font-size: 28px;
+        .result-label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .result-value {
+            font-size: 48px;
             font-weight: bold;
-            color: #1976d2;
-            text-align: center;
-            margin: 15px 0;
+            line-height: 1.2;
+            margin: 10px 0;
         }
 
-        .confirmation-box {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 15px 0;
-            text-align: center;
-        }
-
-        .confirmation-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
+        .confirm-btn {
+            background: white;
+            color: #28a745;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
+            width: 100%;
             margin-top: 15px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .records-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 20px;
         }
 
         .record-item {
@@ -213,27 +197,11 @@
             border-left: 4px solid #667eea;
         }
 
-        .record-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .room-badge {
-            background: #667eea;
-            color: white;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 14px;
-        }
-
         .record-photo {
             max-width: 150px;
             margin-top: 10px;
             border-radius: 8px;
             overflow: hidden;
-            border: 2px solid #e0e0e0;
         }
 
         .record-photo img {
@@ -244,402 +212,310 @@
         .hidden {
             display: none;
         }
-
-        .loader {
-            border: 3px solid #f3f3f3;
-            border-radius: 50%;
-            border-top: 3px solid #667eea;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 10px auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
     </style>
-    <script src="https://unpkg.com/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
+    <!-- Pake Tesseract CDN yang lebih stabil -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1>
-                <i>📸</i>
-                Smart AC Logger - FIXED Version
+                <span>📸</span>
+                AC Logger - Auto Read from Photo
             </h1>
         </div>
 
         <div class="main-card">
-            <form id="airQualityForm">
-                <!-- Pilih Ruangan -->
-                <div class="form-group">
-                    <label>📍 Nomor Ruangan</label>
-                    <select id="roomNumber" required>
-                        <option value="">Pilih Ruangan</option>
-                        <option value="R.101">R.101 - Server Room</option>
-                        <option value="R.102">R.102 - Data Center</option>
-                        <option value="R.103">R.103 - Network Room</option>
-                    </select>
-                </div>
+            <div class="form-group">
+                <label>📍 Pilih Ruangan</label>
+                <select id="roomSelect" required>
+                    <option value="">-- Pilih Ruangan --</option>
+                    <option value="R.101">R.101 - Server Room</option>
+                    <option value="R.102">R.102 - Data Center</option>
+                    <option value="R.103">R.103 - Network Room</option>
+                    <option value="R.104">R.104 - Storage</option>
+                </select>
+            </div>
 
-                <!-- Jenis Alat -->
-                <div class="form-group">
-                    <label>📊 Jenis Alat</label>
-                    <select id="itemName" required>
-                        <option value="">Pilih Jenis Alat</option>
-                        <option value="Thermometer">🌡️ Thermometer (Suhu)</option>
-                        <option value="Hygrometer">💧 Hygrometer (Kelembaban)</option>
-                        <option value="AC Display">❄️ AC Display</option>
-                    </select>
-                </div>
+            <div class="form-group">
+                <label>📊 Jenis Alat</label>
+                <select id="toolSelect" required>
+                    <option value="">-- Pilih Alat --</option>
+                    <option value="Thermometer">🌡️ Thermometer</option>
+                    <option value="Hygrometer">💧 Hygrometer</option>
+                    <option value="AC Display">❄️ AC Display</option>
+                </select>
+            </div>
 
-                <!-- CAMERA SECTION -->
-                <div class="camera-section">
-                    <div class="preview-container" id="previewContainer">
-                        <div class="placeholder-text">
-                            <i>📷</i>
-                            <p>Klik "Buka Kamera" untuk memulai</p>
-                        </div>
-                    </div>
-
-                    <div class="camera-controls">
-                        <button type="button" id="btnStartCamera" class="btn">📷 Buka Kamera</button>
-                        <button type="button" id="btnCapture" class="btn btn-success" disabled>📸 Ambil Foto</button>
-                        <button type="button" id="btnRetake" class="btn btn-secondary" style="display: none;">🔄 Foto Ulang</button>
-                    </div>
-
-                    <!-- Status Messages -->
-                    <div id="statusMessage" class="status-badge hidden"></div>
-
-                    <!-- Loading -->
-                    <div id="loadingIndicator" class="hidden">
-                        <div class="loader"></div>
-                        <p style="text-align: center; color: #667eea;">Memproses foto...</p>
-                    </div>
-
-                    <!-- Detection Result -->
-                    <div id="detectionBox" class="detection-box hidden">
-                        <h3 style="margin-bottom: 10px;">📊 Hasil Deteksi:</h3>
-                        <div id="detectedValue" class="detection-value">-</div>
-                        <p style="font-size: 12px; color: #666;">Pastikan angka sudah sesuai</p>
-                    </div>
-
-                    <!-- Confirmation Box -->
-                    <div id="confirmationBox" class="confirmation-box hidden">
-                        <p style="font-weight: 600; margin-bottom: 10px;">✅ Apakah angka sudah benar?</p>
-                        <div class="confirmation-buttons">
-                            <button type="button" id="btnConfirmYes" class="btn btn-success">Ya, Benar</button>
-                            <button type="button" id="btnConfirmNo" class="btn btn-danger">Tidak, Foto Ulang</button>
-                        </div>
+            <!-- Camera Card -->
+            <div class="camera-card">
+                <div class="preview-window" id="previewWindow">
+                    <div class="placeholder">
+                        <div style="font-size: 48px;">📷</div>
+                        <p>Klik "Buka Kamera" untuk mulai</p>
                     </div>
                 </div>
 
-                <!-- Hidden field untuk menyimpan photo data -->
-                <input type="hidden" id="photoData" value="">
-                <input type="hidden" id="ocrResult" value="">
+                <div class="button-group">
+                    <button id="openCamera" class="btn btn-white">📷 Buka Kamera</button>
+                    <button id="takePhoto" class="btn btn-success" disabled>📸 Ambil Foto</button>
+                    <button id="retakePhoto" class="btn btn-danger" style="display: none;">↺ Foto Ulang</button>
+                </div>
 
-                <button type="submit" id="submitBtn" class="btn" disabled>✅ SUBMIT PENCATATAN</button>
-            </form>
+                <!-- Hasil OCR -->
+                <div id="ocrResult" class="result-box hidden">
+                    <div class="result-label">Nilai Terdeteksi:</div>
+                    <div class="result-value" id="detectedNumber">-</div>
+                    <button id="confirmNumber" class="confirm-btn">✅ KONFIRMASI & SIMPAN</button>
+                </div>
+
+                <!-- Loading -->
+                <div id="loadingOCR" class="result-box hidden" style="text-align: center;">
+                    <div class="loading"></div>
+                    <p style="margin-top: 10px;">Membaca angka dari foto...</p>
+                </div>
+            </div>
+
+            <!-- Hidden input buat nyimpen data -->
+            <input type="hidden" id="photoData">
+            <input type="hidden" id="ocrData">
         </div>
 
-        <!-- Riwayat Records -->
+        <!-- Riwayat -->
         <div class="records-section">
-            <h2>📋 Riwayat Pencatatan</h2>
-            <div id="recordsList"></div>
-            <button id="clearAll" class="btn btn-danger" style="margin-top: 15px; width: 100%;">Hapus Semua Riwayat</button>
+            <h2 style="margin-bottom: 20px;">📋 Riwayat Pencatatan</h2>
+            <div id="recordsContainer"></div>
+            <button id="clearHistory" class="btn btn-danger" style="width: 100%; margin-top: 15px;">Hapus Semua</button>
         </div>
     </div>
 
     <script>
-        // ==================== VARIABLES ====================
-        let records = JSON.parse(localStorage.getItem('airQualityRecords')) || [];
-        let videoStream = null;
-        let videoElement = null;
+        // Data storage
+        let records = JSON.parse(localStorage.getItem('acRecords')) || [];
+        
+        // Camera variables
+        let stream = null;
+        let video = null;
         let canvas = document.createElement('canvas');
-        let capturedPhoto = null;  // Untuk nyimpen foto yang udah diambil
-        let detectedNumbers = '';  // Untuk nyimpen hasil OCR
-        let isConfirmed = false;    // Status konfirmasi
+        let currentPhoto = null;
+        let currentOcrResult = '';
 
-        // ==================== DOM ELEMENTS ====================
-        const previewContainer = document.getElementById('previewContainer');
-        const btnStartCamera = document.getElementById('btnStartCamera');
-        const btnCapture = document.getElementById('btnCapture');
-        const btnRetake = document.getElementById('btnRetake');
-        const statusMessage = document.getElementById('statusMessage');
-        const loadingIndicator = document.getElementById('loadingIndicator');
-        const detectionBox = document.getElementById('detectionBox');
-        const detectedValue = document.getElementById('detectedValue');
-        const confirmationBox = document.getElementById('confirmationBox');
-        const photoData = document.getElementById('photoData');
+        // DOM elements
+        const previewWindow = document.getElementById('previewWindow');
+        const openCamera = document.getElementById('openCamera');
+        const takePhoto = document.getElementById('takePhoto');
+        const retakePhoto = document.getElementById('retakePhoto');
         const ocrResult = document.getElementById('ocrResult');
-        const submitBtn = document.getElementById('submitBtn');
+        const loadingOCR = document.getElementById('loadingOCR');
+        const detectedNumber = document.getElementById('detectedNumber');
+        const confirmNumber = document.getElementById('confirmNumber');
+        const photoData = document.getElementById('photoData');
+        const ocrData = document.getElementById('ocrData');
+        const roomSelect = document.getElementById('roomSelect');
+        const toolSelect = document.getElementById('toolSelect');
 
-        // ==================== FUNGSI DISPLAY RECORDS ====================
+        // Tampilkan records
         function displayRecords() {
-            const recordsList = document.getElementById('recordsList');
+            const container = document.getElementById('recordsContainer');
             
             if (records.length === 0) {
-                recordsList.innerHTML = '<div style="text-align: center; padding: 30px; color: #888;">Belum ada data pencatatan</div>';
+                container.innerHTML = '<div style="text-align: center; padding: 30px; color: #888;">Belum ada data</div>';
                 return;
             }
 
-            recordsList.innerHTML = records.map(record => `
+            container.innerHTML = records.map(record => `
                 <div class="record-item">
-                    <div class="record-header">
-                        <span class="room-badge">${record.roomNumber}</span>
-                        <span style="color: #888; font-size: 12px;">${record.timestamp}</span>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span style="background: #667eea; color: white; padding: 5px 12px; border-radius: 20px;">${record.room}</span>
+                        <span style="color: #888; font-size: 12px;">${record.time}</span>
                     </div>
-                    <p><strong>Alat:</strong> ${record.itemName}</p>
-                    <p><strong>Nilai:</strong> <span style="background: #e8f5e8; padding: 3px 8px; border-radius: 5px; color: #2e7d32;">${record.detectedValue}</span></p>
-                    <div class="record-photo">
-                        <img src="${record.photo}" alt="Foto">
-                    </div>
+                    <p><strong>Alat:</strong> ${record.tool}</p>
+                    <p><strong>Nilai:</strong> <span style="background: #e8f5e8; padding: 3px 8px; border-radius: 5px; font-weight: bold;">${record.value}</span></p>
+                    ${record.photo ? `
+                        <div class="record-photo">
+                            <img src="${record.photo}" alt="Foto">
+                        </div>
+                    ` : ''}
                 </div>
             `).join('');
         }
 
-        // ==================== FUNGSI START CAMERA ====================
-        btnStartCamera.addEventListener('click', async function() {
+        // Buka kamera
+        openCamera.addEventListener('click', async function() {
             try {
-                // Minta akses kamera belakang
-                videoStream = await navigator.mediaDevices.getUserMedia({ 
+                stream = await navigator.mediaDevices.getUserMedia({ 
                     video: { 
-                        facingMode: 'environment', // Kamera belakang
+                        facingMode: 'environment',
                         width: { ideal: 1280 },
                         height: { ideal: 720 }
                     } 
                 });
                 
-                // Buat elemen video
-                videoElement = document.createElement('video');
-                videoElement.srcObject = videoStream;
-                videoElement.autoplay = true;
-                videoElement.playsInline = true;
+                video = document.createElement('video');
+                video.srcObject = stream;
+                video.autoplay = true;
+                video.playsInline = true;
                 
-                // Tampilkan video di container
-                previewContainer.innerHTML = '';
-                previewContainer.appendChild(videoElement);
+                previewWindow.innerHTML = '';
+                previewWindow.appendChild(video);
                 
-                // Update button status
-                btnStartCamera.disabled = true;
-                btnCapture.disabled = false;
-                btnRetake.style.display = 'none';
+                openCamera.disabled = true;
+                takePhoto.disabled = false;
+                retakePhoto.style.display = 'none';
                 
-                // Sembunyikan elemen lain
-                statusMessage.classList.add('hidden');
-                detectionBox.classList.add('hidden');
-                confirmationBox.classList.add('hidden');
-                
-            } catch (error) {
-                alert('Gagal akses kamera. Pastikan izin diberikan!');
-                console.error(error);
+            } catch (err) {
+                alert('Gagal buka kamera: ' + err.message);
             }
         });
 
-        // ==================== FUNGSI CAPTURE FOTO ====================
-        btnCapture.addEventListener('click', function() {
-            if (!videoElement) return;
+        // Ambil foto
+        takePhoto.addEventListener('click', function() {
+            if (!video) return;
             
-            // Set ukuran canvas sesuai video
-            canvas.width = videoElement.videoWidth;
-            canvas.height = videoElement.videoHeight;
+            // Set canvas size
+            canvas.width = video.videoWidth || 640;
+            canvas.height = video.videoHeight || 480;
             
-            // Gambar frame video ke canvas
-            canvas.getContext('2d').drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+            // Capture frame
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
             
-            // Konversi ke data URL (INI YANG DISIMPEN)
-            capturedPhoto = canvas.toDataURL('image/jpeg', 0.9);
+            // Simpan foto
+            currentPhoto = canvas.toDataURL('image/jpeg', 0.9);
             
-            // Tampilkan foto yang udah diambil
-            previewContainer.innerHTML = `<img src="${capturedPhoto}" alt="Captured Photo" style="max-width: 100%;">`;
+            // Tampilkan foto
+            previewWindow.innerHTML = `<img src="${currentPhoto}" alt="Foto">`;
             
-            // Stop kamera (hemat baterai)
-            if (videoStream) {
-                videoStream.getTracks().forEach(track => track.stop());
-                videoStream = null;
+            // Stop kamera
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
             }
             
             // Update buttons
-            btnStartCamera.disabled = false;
-            btnCapture.disabled = true;
-            btnRetake.style.display = 'block';
+            openCamera.disabled = false;
+            takePhoto.disabled = true;
+            retakePhoto.style.display = 'block';
             
-            // Tampilkan loading
-            loadingIndicator.classList.remove('hidden');
-            statusMessage.classList.add('hidden');
-            
-            // Proses OCR dengan delay biar keliatan loading
-            setTimeout(() => {
-                processOCR(capturedPhoto);
-            }, 1500);
+            // Proses OCR
+            processOCR(currentPhoto);
         });
 
-        // ==================== FUNGSI RETAKE FOTO ====================
-        btnRetake.addEventListener('click', function() {
-            // Reset semua
-            previewContainer.innerHTML = `
-                <div class="placeholder-text">
-                    <i>📷</i>
-                    <p>Klik "Buka Kamera" untuk foto ulang</p>
+        // Foto ulang
+        retakePhoto.addEventListener('click', function() {
+            previewWindow.innerHTML = `
+                <div class="placeholder">
+                    <div style="font-size: 48px;">📷</div>
+                    <p>Klik "Buka Kamera" untuk mulai</p>
                 </div>
             `;
             
-            // Reset variables
-            capturedPhoto = null;
-            detectedNumbers = '';
-            isConfirmed = false;
-            
-            // Reset UI
-            btnStartCamera.disabled = false;
-            btnCapture.disabled = true;
-            btnRetake.style.display = 'none';
-            statusMessage.classList.add('hidden');
-            loadingIndicator.classList.add('hidden');
-            detectionBox.classList.add('hidden');
-            confirmationBox.classList.add('hidden');
-            submitBtn.disabled = true;
-            
-            // Kosongkan hidden field
+            currentPhoto = null;
+            currentOcrResult = '';
+            ocrResult.classList.add('hidden');
+            loadingOCR.classList.add('hidden');
             photoData.value = '';
-            ocrResult.value = '';
+            ocrData.value = '';
+            
+            openCamera.disabled = false;
+            takePhoto.disabled = true;
+            retakePhoto.style.display = 'none';
         });
 
-        // ==================== FUNGSI OCR ====================
+        // Fungsi OCR
         async function processOCR(imageData) {
+            // Tampilkan loading
+            loadingOCR.classList.remove('hidden');
+            ocrResult.classList.add('hidden');
+            
             try {
+                // Pake Tesseract
                 const { createWorker } = Tesseract;
                 const worker = await createWorker('eng');
                 
-                // Setting biar fokus ke angka
+                // Set karakter yang mau dideteksi (angka dan simbol suhu)
                 await worker.setParameters({
-                    tessedit_char_whitelist: '0123456789.,°C%RH',
+                    tessedit_char_whitelist: '0123456789.,°C%'
                 });
                 
-                // Proses OCR
+                // Proses
                 const { data: { text } } = await worker.recognize(imageData);
                 await worker.terminate();
                 
-                // Extract angka dari text
-                const matches = text.match(/\d+[.,]?\d*\s*°?C?|\d+[.,]?\d*\s*%?RH?/gi);
-                detectedNumbers = matches ? matches.join(' ') : 'Tidak terdeteksi';
+                // Extract angka (cari pola seperti 24.5°C atau 65%)
+                const matches = text.match(/\d+[.,]?\d*\s*°?C?|\d+[.,]?\d*\s*%?/g);
+                const result = matches ? matches[0] : 'Tidak terbaca';
                 
                 // Sembunyikan loading
-                loadingIndicator.classList.add('hidden');
+                loadingOCR.classList.add('hidden');
                 
-                if (detectedNumbers !== 'Tidak terdeteksi') {
-                    // Tampilkan hasil deteksi
-                    detectedValue.textContent = detectedNumbers;
-                    detectionBox.classList.remove('hidden');
+                if (result !== 'Tidak terbaca') {
+                    // Tampilkan hasil
+                    detectedNumber.textContent = result;
+                    ocrResult.classList.remove('hidden');
                     
-                    // Tampilkan konfirmasi
-                    confirmationBox.classList.remove('hidden');
-                    
-                    // Simpan di hidden field
+                    // Simpan data
+                    currentOcrResult = result;
                     photoData.value = imageData;
-                    ocrResult.value = detectedNumbers;
-                    
-                    // Kasih pesan sukses
-                    statusMessage.className = 'status-badge status-success';
-                    statusMessage.innerHTML = '✅ Foto berhasil diproses! Periksa hasil deteksi.';
-                    statusMessage.classList.remove('hidden');
-                    
+                    ocrData.value = result;
                 } else {
-                    // Gagal deteksi
-                    statusMessage.className = 'status-badge status-error';
-                    statusMessage.innerHTML = '❌ Tidak ada angka terdeteksi. Silakan foto ulang!';
-                    statusMessage.classList.remove('hidden');
-                    
-                    // Enable retake button aja
-                    btnRetake.style.display = 'block';
+                    alert('❌ Tidak bisa membaca angka. Silakan foto ulang!');
                 }
                 
             } catch (error) {
                 console.error('OCR Error:', error);
-                loadingIndicator.classList.add('hidden');
-                
-                statusMessage.className = 'status-badge status-error';
-                statusMessage.innerHTML = '❌ Gagal memproses foto. Silakan coba lagi!';
-                statusMessage.classList.remove('hidden');
-                
-                btnRetake.style.display = 'block';
+                loadingOCR.classList.add('hidden');
+                alert('Gagal memproses foto. Coba lagi!');
             }
         }
 
-        // ==================== KONFIRMASI ====================
-        document.getElementById('btnConfirmYes').addEventListener('click', function() {
-            isConfirmed = true;
-            confirmationBox.classList.add('hidden');
-            submitBtn.disabled = false;
-            
-            statusMessage.className = 'status-badge status-success';
-            statusMessage.innerHTML = '✅ Data siap disubmit!';
-            statusMessage.classList.remove('hidden');
-        });
-
-        document.getElementById('btnConfirmNo').addEventListener('click', function() {
-            // Trigger retake
-            btnRetake.click();
-        });
-
-        // ==================== SUBMIT FORM ====================
-        document.getElementById('airQualityForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
+        // Konfirmasi dan simpan
+        confirmNumber.addEventListener('click', function() {
             // Validasi
-            if (!capturedPhoto) {
-                alert('Harap ambil foto terlebih dahulu!');
+            if (!roomSelect.value) {
+                alert('Pilih ruangan dulu!');
                 return;
             }
             
-            if (!detectedNumbers || detectedNumbers === 'Tidak terdeteksi') {
-                alert('Harap pastikan foto bisa diproses!');
+            if (!toolSelect.value) {
+                alert('Pilih jenis alat dulu!');
                 return;
             }
             
-            if (!isConfirmed) {
-                alert('Harap konfirmasi hasil deteksi!');
+            if (!currentOcrResult) {
+                alert('Tidak ada hasil OCR!');
                 return;
             }
             
-            const roomNumber = document.getElementById('roomNumber').value;
-            const itemName = document.getElementById('itemName').value;
-            
-            if (!roomNumber || !itemName) {
-                alert('Harap pilih ruangan dan jenis alat!');
-                return;
-            }
-            
-            // Buat record baru
+            // Buat record
             const record = {
                 id: Date.now(),
-                roomNumber: roomNumber,
-                itemName: itemName,
-                detectedValue: detectedNumbers,
-                photo: capturedPhoto,  // FIX: pake capturedPhoto, bukan currentPhotoData
-                timestamp: new Date().toLocaleString('id-ID')
+                room: roomSelect.value,
+                tool: toolSelect.value,
+                value: currentOcrResult,
+                photo: currentPhoto,
+                time: new Date().toLocaleString('id-ID')
             };
             
-            // Simpan ke array dan localStorage
+            // Simpan
             records.unshift(record);
-            localStorage.setItem('airQualityRecords', JSON.stringify(records));
+            localStorage.setItem('acRecords', JSON.stringify(records));
             
             // Update tampilan
             displayRecords();
             
-            // Reset form
-            document.getElementById('airQualityForm').reset();
-            btnRetake.click(); // Trigger reset camera section
+            // Reset
+            roomSelect.value = '';
+            toolSelect.value = '';
+            retakePhoto.click();
             
             alert('✅ Data berhasil disimpan!');
         });
 
-        // ==================== CLEAR ALL ====================
-        document.getElementById('clearAll').addEventListener('click', function() {
-            if (confirm('Yakin hapus semua riwayat?')) {
+        // Hapus semua
+        document.getElementById('clearHistory').addEventListener('click', function() {
+            if (confirm('Hapus semua riwayat?')) {
                 records = [];
-                localStorage.removeItem('airQualityRecords');
+                localStorage.removeItem('acRecords');
                 displayRecords();
             }
         });
